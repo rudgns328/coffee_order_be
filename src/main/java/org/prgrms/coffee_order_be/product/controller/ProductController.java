@@ -3,7 +3,6 @@ package org.prgrms.coffee_order_be.product.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.prgrms.coffee_order_be.product.model.ProductDTO;
 import org.prgrms.coffee_order_be.product.model.request.ProductRequestDTO;
 import org.prgrms.coffee_order_be.product.model.request.UpdateProductDTO;
 import org.prgrms.coffee_order_be.product.model.response.ProductResponseDTO;

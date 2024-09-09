@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.prgrms.coffee_order_be.product.domain.Category;
-import org.prgrms.coffee_order_be.product.model.ProductDTO;
 import org.prgrms.coffee_order_be.product.model.request.ProductRequestDTO;
 import org.prgrms.coffee_order_be.product.model.response.ProductResponseDTO;
 import org.prgrms.coffee_order_be.product.respository.ProductRepository;
@@ -15,10 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.UUID;
-
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -35,15 +31,13 @@ class ProductControllerTest {
     @Autowired
     private ProductService productService;
 
-    @Autowired
-    private ProductRepository productRepository;
 
     @Test
     @DisplayName("Product 저장 테스트")
-    void testSaveProduct() throws Exception {
+    void saveProduct() throws Exception {
         ProductRequestDTO dto = ProductRequestDTO.builder()
                 .productName("Test Product")
-                .category(Category.valueOf("믹스커피"))
+                .category(Category.valueOf("AMERICANO"))
                 .price(1000L)
                 .description("Test Description")
                 .build();
@@ -56,12 +50,13 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.productId").isNotEmpty());
     }
 
+
     @Test
     @DisplayName("ID로 Product 조회 테스트")
-    void testGetProductById() throws Exception {
+    void getProductById() throws Exception {
         ProductRequestDTO dto = ProductRequestDTO.builder()
                 .productName("Test Product")
-                .category(Category.valueOf("믹스커피"))
+                .category(Category.valueOf("AMERICANO"))
                 .price(1000L)
                 .description("Test Description")
                 .build();
@@ -72,16 +67,17 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.productName").value("Test Product"))
-                .andExpect(jsonPath("$.category").value("믹스커피"))
+                .andExpect(jsonPath("$.category").value("AMERICANO"))
                 .andExpect(jsonPath("$.description").value("Test Description"));
     }
 
+
     @Test
     @DisplayName("Product 업데이트 테스트")
-    void testUpdateProduct() throws Exception {
+    void updateProduct() throws Exception {
         ProductRequestDTO dto = ProductRequestDTO.builder()
                 .productName("Test Product")
-                .category(Category.valueOf("믹스커피"))
+                .category(Category.valueOf("AMERICANO"))
                 .price(1000L)
                 .description("Original Description")
                 .build();
@@ -95,30 +91,29 @@ class ProductControllerTest {
                 }
                 """;
 
-        // 업데이트 수행
         mockMvc.perform(put("/product/{id}", savedProduct.getProductId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updateJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.productName").value("Test Product"))
-                .andExpect(jsonPath("$.category").value("믹스커피"))
+                .andExpect(jsonPath("$.category").value("AMERICANO"))
                 .andExpect(jsonPath("$.description").value("Update Description"))
                 .andExpect(jsonPath("$.price").value(1500));
     }
 
+
     @Test
     @DisplayName("Product 삭제 테스트")
-    void testDeleteProduct() throws Exception {
+    void deleteProduct() throws Exception {
         ProductRequestDTO dto = ProductRequestDTO.builder()
                 .productName("Test Product")
-                .category(Category.valueOf("믹스커피"))
+                .category(Category.valueOf("AMERICANO"))
                 .price(1000L)
                 .description("Test Description")
                 .build();
 
         ProductResponseDTO savedProduct = productService.createProduct(dto);
 
-        // 삭제 요청
         mockMvc.perform(delete("/product/{id}", savedProduct.getProductId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
