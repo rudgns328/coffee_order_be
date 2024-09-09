@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductConverter {
 
-    // 입력용 DTO -> 엔티티 변환
     public Product convertToEntity(ProductRequestDTO dto) {
         return Product.builder()
                 .productName(dto.getProductName())
@@ -18,7 +17,6 @@ public class ProductConverter {
                 .build();
     }
 
-    // 엔티티 -> 출력용 DTO 변환
     public ProductResponseDTO convertToDTO(Product product) {
         return ProductResponseDTO.builder()
                 .productId(product.getProductId())

@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.prgrms.coffee_order_be.common.exception.CustomException;
 import org.prgrms.coffee_order_be.product.converter.ProductConverter;
 import org.prgrms.coffee_order_be.product.domain.Product;
-import org.prgrms.coffee_order_be.product.model.ProductDTO;
 import org.prgrms.coffee_order_be.product.model.request.ProductRequestDTO;
 import org.prgrms.coffee_order_be.product.model.request.UpdateProductDTO;
 import org.prgrms.coffee_order_be.product.model.response.ProductResponseDTO;
@@ -18,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -63,13 +61,8 @@ public class ProductService {
     }
 
     public ProductResponseDTO updateProduct(UUID productId, UpdateProductDTO dto) {
-        Optional<Product> foundProduct = productRepository.findById(productId);
-
-        if (foundProduct.isEmpty()) {
-            throw new CustomException("존재하지 않는 상품 ID: " + productId, HttpStatus.NOT_FOUND);
-        }
-
-        Product product = foundProduct.get();
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new CustomException("존재하지 않는 상품 ID: " + productId, HttpStatus.NOT_FOUND));
 
         if (dto.getPrice() <= 0) {
             throw new CustomException("가격은 0보다 커야 합니다.", HttpStatus.BAD_REQUEST);
@@ -81,8 +74,7 @@ public class ProductService {
             product.updateDescription(dto.getDescription());
         }
 
-        Product updatedProduct = productRepository.save(product);
-        return productConverter.convertToDTO(updatedProduct);
+        return productConverter.convertToDTO(product);
     }
 
     public void deleteProduct(UUID productId) {

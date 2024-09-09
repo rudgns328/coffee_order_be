@@ -1,30 +1,29 @@
-package org.prgrms.coffee_order_be.product.model;
+package org.prgrms.coffee_order_be.order.model.response;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.prgrms.coffee_order_be.product.domain.Category;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDTO {
+public class OrderItemResponseDTO {
 
     @NotNull
     private UUID productId;
     @NotNull
     private String productName;
     @NotNull
-    private String category;
+    private Category category;
     @NotNull
     private long price;
-
-    private String description;
+    @NotNull
+    private int quantity;
 }
+
